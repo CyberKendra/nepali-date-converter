@@ -72,4 +72,4 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 Your Name - [@cyberkendra](https://twitter.com/cyberkendra) - carecyberkendra@gmail.com
 
-Project Link: [https://github.com/CyberKendra/nepali-date-converter](https://github.com/CyberKendra/nepali-date-converter)
+Project Link: [Nepali Date Converter](https://www.cyberkendra.com/p/nepali-date-converter.html)
