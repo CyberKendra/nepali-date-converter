@@ -93,6 +93,22 @@
                 font-size: 20px;
             }
         }
+        .attribution {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 14px;
+        }
+        .attribution a {
+            color: #3f51b5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .attribution a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +131,11 @@
         </div>
         <div class="result" id="result"></div>
         <div class="nepali-result" id="nepaliResult"></div>
+        
+        <!-- Attribution -->
+        <div class="attribution">
+            <p>Designed & Developed by <a href="https://cyberkendra.com" target="_blank">CyberKendra</a></p>
+        </div>
     </div>
 
     <script>
