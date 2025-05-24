@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepali Date Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #3f51b5;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        select, input[type="date"] {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid #3f51b5;
+            background-color: #f5f5f5;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+        }
+        select:focus, input[type="date"]:focus {
+            outline: none;
+            background-color: #e8eaf6;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            accent-color: #3f51b5;
+        }
+        .result, .nepali-result {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        .result {
+            background-color: #e8eaf6;
+        }
+        .nepali-result {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            background-color: #fff3e0;
+        }
+        h3 {
+            margin-top: 0;
+            color: #3f51b5;
+            font-weight: 500;
+        }
+        .date-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #212121;
+        }
+        .material-icons {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+                margin: 16px;
+            }
+            .date-time {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="material-icons">event</i> Nepali Date Converter</h1>
+        <div class="input-group">
+            <select id="countrySelect" onchange="updateDate()">
+                <option value="Asia/Kathmandu">Nepal</option>
+                <option value="Asia/Kolkata">India</option>
+                <option value="America/New_York">United States</option>
+                <option value="Europe/London">United Kingdom</option>
+                <option value="Asia/Tokyo">Japan</option>
+                <option value="Australia/Sydney">Australia</option>
+            </select>
+            <div class="checkbox-group">
+                <input type="checkbox" id="manualDateCheck" onchange="toggleDateInput()">
+                <label for="manualDateCheck">Use specific date</label>
+            </div>
+            <input type="date" id="dateInput" onchange="updateDate()" style="display: none;">
+        </div>
+        <div class="result" id="result"></div>
+        <div class="nepali-result" id="nepaliResult"></div>
+    </div>
+
+    <script>
+        const nepaliMonths = ['बैशाख', 'जेठ', 'असार', 'साउन', 'भदौ', 'असोज', 'कार्तिक', 'मंसिर', 'पुष', 'माघ', 'फागुन', 'चैत'];
+        const nepaliDays = ['आइतबार', 'सोमबार', 'मंगलबार', 'बुधबार', 'बिहिबार', 'शुक्रबार', 'शनिबार'];
+        const nepaliNumerals = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+
+        function convertToNepaliDate(date) {
+            const year = date.getFullYear() + 56;
+            const month = nepaliMonths[date.getMonth()];
+            const day = date.getDate() + 15;
+            const weekday = nepaliDays[date.getDay()];
+            return { year, month, day, weekday };
+        }
+
+        function toNepaliNumeral(num) {
+            return num.toString().split('').map(digit => nepaliNumerals[parseInt(digit)]).join('');
+        }
+
+        function updateDate() {
+            const countrySelect = document.getElementById('countrySelect');
+            const dateInput = document.getElementById('dateInput');
+            const manualDateCheck = document.getElementById('manualDateCheck');
+            const resultDiv = document.getElementById('result');
+            const nepaliResultDiv = document.getElementById('nepaliResult');
+
+            let selectedDate;
+            if (manualDateCheck.checked && dateInput.value) {
+                selectedDate = new Date(dateInput.value);
+            } else {
+                selectedDate = new Date();
+            }
+
+            const options = { timeZone: countrySelect.value, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const formattedDate = selectedDate.toLocaleString('en-US', options);
+
+            const nepaliDate = convertToNepaliDate(selectedDate);
+            const nepaliTime = selectedDate.toLocaleTimeString('en-US', { timeZone: countrySelect.value, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            resultDiv.innerHTML = `
+                <h3><i class="material-icons">access_time</i>Selected Date & Time:</h3>
+                <p class="date-time">${formattedDate}</p>
+                <h3><i class="material-icons">calendar_today</i>Nepali Date & Time:</h3>
+                <p class="date-time">${nepaliDate.year} ${nepaliDate.month} ${nepaliDate.day}, ${nepaliDate.weekday} ${nepaliTime}</p>
+            `;
+
+            nepaliResultDiv.innerHTML = `
+                <h3><i class="material-icons">translate</i>नेपाली मिति र समय:</h3>
+                <p class="date-time">${toNepaliNumeral(nepaliDate.year)} ${nepaliDate.month} ${toNepaliNumeral(nepaliDate.day)}, ${nepaliDate.weekday} ${toNepaliNumeral(nepaliTime.replace(/[APM]/g, ''))}</p>
+            `;
+        }
+
+        function toggleDateInput() {
+            const dateInput = document.getElementById('dateInput');
+            const manualDateCheck = document.getElementById('manualDateCheck');
+            dateInput.style.display = manualDateCheck.checked ? 'block' : 'none';
+            updateDate();
+        }
+
+        setInterval(updateDate, 1000);
+        updateDate();
+    </script>
+</body>
+</html>
